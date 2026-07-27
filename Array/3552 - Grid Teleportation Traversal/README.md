@@ -1,37 +1,36 @@
 ## Problem Summary
-The problem involves finding the minimum number of moves to reach the bottom-right corner of a grid from the top-left corner, with the ability to teleport to other cells with the same letter. The grid contains letters, empty cells, and obstacles.
+The problem involves finding the minimum number of moves to reach the bottom-right corner of a grid, where certain cells allow teleportation to other cells with the same letter. The grid contains obstacles and empty cells.
 
 ## Intuition
-To solve this problem, we can use a breadth-first search (BFS) approach, exploring all possible moves from the current cell and keeping track of the minimum distance to each cell. The teleportation aspect can be handled by maintaining a map of cells with the same letter.
+To solve this problem, one would naturally think of using a shortest path algorithm, such as Dijkstra's, to explore the grid and consider both walking and teleporting as possible moves.
 
 ## Core Idea
-The key insight is to use a deque to implement the BFS, allowing for efficient exploration of the grid and teleportation to other cells with the same letter.
+The key insight is to use a priority queue to efficiently explore the grid, where the priority is the minimum number of moves to reach each cell, and to use a hashmap to store the coordinates of cells with the same letter for teleportation.
 
 ## Step-by-Step Algorithm
-1. Initialize a map `mp` to store the coordinates of cells with the same letter.
-2. Create a distance matrix `dist` to keep track of the minimum distance to each cell.
-3. Initialize a deque `dq` with the starting cell (0, 0) and set its distance to 0.
-4. While the deque is not empty, pop the front cell and explore its neighbors.
-5. If a neighbor is a cell with the same letter, teleport to all other cells with the same letter and update their distances.
-6. If a neighbor is a valid cell, update its distance if a shorter path is found.
-7. Repeat steps 4-6 until the deque is empty or the target cell is reached.
+1. Initialize a hashmap `mp` to store the coordinates of cells with the same letter.
+2. Create a priority queue `pq` to store cells to be explored, with the priority being the minimum number of moves to reach each cell.
+3. Initialize the distance `dist` to all cells as infinity, except for the top-left cell which is 0.
+4. Explore the grid by popping cells from the priority queue, and for each cell, consider both walking to neighboring cells and teleporting to cells with the same letter.
+5. Update the distance to each cell if a shorter path is found, and add the cell to the priority queue if necessary.
+6. Repeat the process until the bottom-right cell is reached or the priority queue is empty.
 
 ## Dry Run
-Consider a 3x3 grid with the following cells: `[['A', ' ', ' '], [' ', 'A', ' '], [' ', ' ', ' ']]`. Starting from the top-left cell, we can teleport to the middle-left cell with the same letter 'A'. From there, we can move to the bottom-right cell in two steps.
+Consider a 3x3 grid with the top-left cell being 'A', the bottom-right cell being empty, and the middle cell being '#'. The algorithm would first explore the top-left cell, then teleport to the bottom-left cell, and finally walk to the bottom-right cell.
 
 ## Time Complexity
-The time complexity is O(n*m + k), where n and m are the dimensions of the grid and k is the number of cells with letters, because we visit each cell at most once and perform a constant amount of work for each cell.
+The time complexity is O(n*m*log(n*m)) because the algorithm uses a priority queue to explore the grid, where n and m are the dimensions of the grid.
 
 ## Space Complexity
-The space complexity is O(n*m + k), where n and m are the dimensions of the grid and k is the number of cells with letters, because we need to store the distance matrix and the map of cells with the same letter.
+The space complexity is O(n*m) because the algorithm uses a hashmap to store the coordinates of cells with the same letter and a distance array to store the minimum number of moves to reach each cell.
 
 ## Why This Approach Works
-This approach works because it exhaustively explores all possible moves from the current cell, keeping track of the minimum distance to each cell. The teleportation aspect is handled correctly by maintaining a map of cells with the same letter and updating their distances accordingly.
+This approach works because it uses a priority queue to efficiently explore the grid, and it considers both walking and teleporting as possible moves, ensuring that the shortest path to the bottom-right cell is found.
 
 ## Common Mistakes / Edge Cases
-* Forgetting to clear the map of cells with the same letter after teleporting to avoid revisiting the same cells.
-* Not handling the case where the target cell is not reachable.
-* Not checking for obstacles when moving to a neighboring cell.
+* Not clearing the hashmap after teleporting to a cell to avoid revisiting the same cell.
+* Not checking if a cell is an obstacle before walking to it.
+* Not handling the case where the bottom-right cell is not reachable.
 
 ## Recognition Pattern
-This problem can be recognized by the presence of a grid with letters, empty cells, and obstacles, and the requirement to find the minimum number of moves to reach a target cell with the ability to teleport to other cells with the same letter. The problem statement may mention "teleportation" or "portals" explicitly.
+This problem can be recognized by the presence of a grid, obstacles, and cells with letters that allow teleportation, and the goal of finding the minimum number of moves to reach a target cell. The use of a priority queue and a hashmap is a common technique for solving shortest path problems with special moves.
